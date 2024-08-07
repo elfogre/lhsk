@@ -1,4 +1,4 @@
-package org.elfogre
+package io.github.elfogre
 
 import io.kotest.core.extensions.install
 import io.kotest.core.spec.style.FeatureSpec

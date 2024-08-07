@@ -1,5 +1,6 @@
-package org.elfogre
+package io.github.elfogre
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 
@@ -37,6 +38,24 @@ class LHSBracketsParserTest : FeatureSpec({
                     Filter("field8", Operator.NOTIN, "whatever8"),
                 ),
             )
+        }
+        scenario("no operation exception") {
+            shouldThrow<OperatorNotFoundException> {
+                LHSBracketsParser.parseSearchQueryParams(
+                    listOf(
+                        Pair("field8[nottin]", "whatever8"),
+                    )
+                )
+            }
+        }
+        scenario("invalid syntax exception") {
+            shouldThrow<InvalidSyntaxException> {
+                LHSBracketsParser.parseSearchQueryParams(
+                    listOf(
+                        Pair("field8", "whatever8"),
+                    )
+                )
+            }
         }
     }
 })

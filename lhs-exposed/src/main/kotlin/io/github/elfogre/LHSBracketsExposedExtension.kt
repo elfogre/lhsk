@@ -1,4 +1,4 @@
-package org.elfogre
+package io.github.elfogre
 
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.CustomEnumerationColumnType
@@ -22,6 +22,15 @@ import org.jetbrains.exposed.sql.StringColumnType
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.andWhere
 
+/**
+ * Adds an order by clause to the query based on the provided list of sorts.
+ * The sorts are sorted by their priority and mapped to exposed sorts that consist of column and sort order.
+ * The exposed sorts are then used to create the order by clause in the query.
+ * The method returns the modified query object with the order by clause applied.
+ *
+ * @param sorts the list of sorts to apply as the order by clause
+ * @return the modified query object with the order by clause applied
+ */
 fun Query.addOrderByFromLHSSort(sorts: List<Sort>): Query {
     val exposedSorts = sorts.sortedBy { it.priority }.map { sort ->
         val column = searchColumn(sort.fieldName, this.targets)
@@ -33,6 +42,17 @@ fun Query.addOrderByFromLHSSort(sorts: List<Sort>): Query {
     return this.orderBy(*exposedSorts.toTypedArray())
 }
 
+/**
+ * Adds where expressions to the Query based on the provided list of filters.
+ * Each filter consists of a field name, an operator, and a value.
+ * The method applies the filter conditions to the corresponding columns in the Query's target tables.
+ * If the operator is IN or NOTIN, the filter value is treated as a comma-separated list and the condition is applied to the column as a list of values.
+ * If the operator is any other comparison operator, the condition is applied to the column as a single value.
+ * The method returns the modified Query object.
+ *
+ * @param filters the list of filters to apply as where expressions
+ * @return the modified Query object
+ */
 fun Query.addWhereExpressionFromLHSFilter(filters: List<Filter>): Query {
     filters.forEach { filter ->
         val column = searchColumn(filter.fieldName, this.targets)

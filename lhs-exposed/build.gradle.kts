@@ -4,6 +4,8 @@ plugins {
 
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
+    `maven-publish`
+    signing
 }
 
 repositories {
@@ -12,7 +14,7 @@ repositories {
 }
 
 version = "1.0.0"
-group = "org.elfogre"
+group = "io.github.elfogre"
 
 dependencies {
     testImplementation(libs.kotest)
@@ -35,6 +37,7 @@ java {
         languageVersion = JavaLanguageVersion.of(11)
     }
     withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.jar {
@@ -47,4 +50,39 @@ tasks.jar {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("lhsParser") {
+            groupId = "io.github.elfogre"
+            artifactId = "lhs-exposed"
+            version = "1.0.0"
+
+            from(components["java"])
+
+            pom {
+                name = "lhs-exposed"
+                description = "Apply LHS parsed query to exposed queries"
+                url = "https://github.com/elfogre/lhsk"
+                inceptionYear = "2024"
+                developers {
+                    developer {
+                        id = "elfogre"
+                        name = "Jose Escobar"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://github.com/elfogre/lhsk.git"
+                    developerConnection = "scm:git:ssh://github.com/elfogre/lhsk.git"
+                    url = "https://github.com/elfogre/lhsk"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = uri(layout.buildDirectory.dir("staging-deploy"))
+        }
+    }
 }

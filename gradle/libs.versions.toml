@@ -20,3 +20,4 @@ exposedjdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "ex
 
 [plugins]
 jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.22" }
+jreleaser = { id = "org.jreleaser", version = "1.13.1" }

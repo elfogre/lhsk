@@ -1,4 +1,4 @@
-package org.elfogre
+package io.github.elfogre
 
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
