@@ -54,7 +54,7 @@ tasks.named<Test>("test") {
 
 publishing {
     publications {
-        create<MavenPublication>("lhsParser") {
+        create<MavenPublication>("lhsExposed") {
             groupId = "io.github.elfogre"
             artifactId = "lhs-exposed"
             version = "1.0.0"
@@ -66,6 +66,14 @@ publishing {
                 description = "Apply LHS parsed query to exposed queries"
                 url = "https://github.com/elfogre/lhsk"
                 inceptionYear = "2024"
+
+                licenses {
+                    license {
+                        name.set("GPL-3.0 license")
+                        url.set("https://www.gnu.org/licenses/gpl-3.0.html")
+                    }
+                }
+
                 developers {
                     developer {
                         id = "elfogre"
@@ -85,4 +93,15 @@ publishing {
             url = uri(layout.buildDirectory.dir("staging-deploy"))
         }
     }
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications["lhsExposed"])
+}
+
+artifacts {
+    add("archives", tasks.named("jar").get())
+    add("archives", tasks.named("sourcesJar").get())
+    add("archives", tasks.named("javadocJar").get())
 }
