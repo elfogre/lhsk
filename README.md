@@ -1,8 +1,7 @@
 # LHSK (LHS brackets parser and utilities for Kotlin and Exposed)
 
 [![License](https://img.shields.io/badge/License-GNU%20GPL-blue)](LICENSE)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.elfogre/lhs-parser/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.elfogre/lhs-parser)
-
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.elfogre/lhs-parser.svg?label=Maven%20Central&logo=apachemaven)](https://central.sonatype.com/artifact/io.github.elfogre/lhs-parser/)
 
 ## Table of Contents
 
@@ -10,6 +9,8 @@
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Supported operators](#supported-operators)
+- [Valid SQL types](#valid-sql-types)
 - [Contributing](#contributing)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
@@ -28,7 +29,7 @@ This library provides utilities to parse LHS brackets syntax and also to easily 
 ## Features
 
 - Easy integration with Kotlin projects.
-- Comprehensive API for database interactions using Exposed.
+- Comprehensive API for database interactions using [Exposed](https://github.com/JetBrains/Exposed).
 - Support for join queries in Exposed.
 - Supports Java SDK version 11 and Kotlin API version 1.9.
 
@@ -60,6 +61,8 @@ fun main() {
 
 ### Example 2: Database Interaction with Exposed
 
+Use exact table column names as property types on LHS.
+
 ```kotlin
 import io.github.elfogre.LHSBracketsExposedExtension
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -76,6 +79,28 @@ fun main() {
 }
 ```
 Check for more examples in [integration tests](lhs-exposed/src/test/kotlin/io/github/elfogre/LHSBracketsExposedExtensionTest.kt).
+
+## Supported operators
+
+- `eq`: Equal to
+- `neq`: Not equal to
+- `gt`: Greater than
+- `gte`: Greater than or equal to
+- `lt`: Less than
+- `lte`: Less than or equal to
+- `in`: In a specified list of values  (Use a comma separated list as value)
+- `notin`: Not in a specified list of values (Use a comma separated list as value)
+
+## Valid SQL types
+
+Supported exposed column types for automatic casting in `lhs-exposed` are:
+
+- `StringColumnType`
+- `LongColumnType`
+- `CustomEnumerationColumnType`
+- `IntegerColumnType`
+- `DecimalColumnType`
+
 
 ## Contributing
 
