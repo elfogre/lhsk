@@ -37,6 +37,17 @@ object LHSBracketsParser {
         }
         return SearchParams(filters, sorts.sortedBy { it.priority })
     }
+    
+    fun searchParamsToQueryParams(searchParams: SearchParams): List<Pair<String, String>> {
+        return buildList {
+            searchParams.filters.forEach { filter ->
+                add("${filter.fieldName}[${filter.operator.name.lowercase()}]" to filter.value)
+            }
+            searchParams.sorts.forEach { sort ->
+                add("sort[${sort.priority}]" to "${sort.fieldName}:${sort.sortType.name.lowercase()}")
+            }
+        }
+    }
 }
 
 
