@@ -1,5 +1,6 @@
 package io.github.elfogre
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.extensions.install
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.extensions.testcontainers.JdbcDatabaseContainerExtension
@@ -78,6 +79,29 @@ class LHSBracketsExposedExtensionTest : FeatureSpec({
                 UserTable.join(TransactionTable, JoinType.INNER, UserTable.id, TransactionTable.userId).selectAll().addOrderByFromLHSSort(lhsSorts).map { it[UserTable.name] }
             }
             names shouldBe listOf("Chad", "Julio", "Lucas", "Lucas", "John")
+        }
+        scenario("multiple order with joins on excluded columns with exception true") {
+            val lhsSorts = listOf(
+                Sort("priority", SortType.DESC, 1),
+                Sort("name", SortType.DESC, 2),
+            )
+            shouldThrow<ExcludedColumnException> {
+                transaction {
+                    UserTable.join(TransactionTable, JoinType.INNER, UserTable.id, TransactionTable.userId).selectAll().addOrderByFromLHSSort(lhsSorts, listOf(TransactionTable.priority), true).map { it[UserTable.name] }
+                }
+            }
+        }
+        scenario("multiple order with joins on excluded columns with exception false") {
+            val lhsSorts = listOf(
+                Sort("priority", SortType.DESC, 1),
+                Sort("name", SortType.DESC, 2),
+            )
+            val names = transaction {
+                UserTable.join(TransactionTable, JoinType.INNER, UserTable.id, TransactionTable.userId).selectAll()
+                    .addOrderByFromLHSSort(lhsSorts, listOf(TransactionTable.priority), false)
+                    .map { it[UserTable.name] }
+            }
+            names shouldBe listOf("Lucas", "Lucas", "Julio", "John", "Chad")
         }
     }
 
@@ -178,6 +202,27 @@ class LHSBracketsExposedExtensionTest : FeatureSpec({
                 UserTable.join(TransactionTable, JoinType.INNER, UserTable.id, TransactionTable.userId).selectAll().addWhereExpressionFromLHSFilter(lhsFilters).map { it[UserTable.name] }
             }
             names shouldBe listOf("John", "Chad")
+        }
+        scenario("multiple filters with exclusions") {
+            val lhsFilters = listOf(
+                Filter("transaction_amount", Operator.GTE, "1000"),
+                Filter("type", Operator.IN, "COMMON,LEGENDARY"),
+            )
+            val names = transaction {
+                UserTable.join(TransactionTable, JoinType.INNER, UserTable.id, TransactionTable.userId).selectAll().addWhereExpressionFromLHSFilter(lhsFilters, listOf(TransactionTable.transactionAmount)).map { it[UserTable.name] }
+            }
+            names shouldBe listOf("John", "Chad", "Lucas", "Lucas")
+        }
+        scenario("multiple filters with exclusions throwing exceptions") {
+            val lhsFilters = listOf(
+                Filter("transaction_amount", Operator.GTE, "1000"),
+                Filter("type", Operator.IN, "COMMON,LEGENDARY"),
+            )
+            shouldThrow<ExcludedColumnException> {
+                transaction {
+                    UserTable.join(TransactionTable, JoinType.INNER, UserTable.id, TransactionTable.userId).selectAll().addWhereExpressionFromLHSFilter(lhsFilters, listOf(TransactionTable.transactionAmount), true).map { it[UserTable.name] }
+                }
+            }
         }
     }
 
