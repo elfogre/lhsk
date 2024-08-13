@@ -47,7 +47,7 @@ object LHSBracketsParser {
      * @param searchParams the search parameters object containing filters and sorts
      * @return a list of key-value pairs representing the query parameters
      */
-    fun searchParamsToQueryParams(searchParams: SearchParams): List<Pair<String, String>> {
+    fun searchParamsToLHSBracketsQueryParams(searchParams: SearchParams): List<Pair<String, String>> {
         return buildList {
             searchParams.filters.forEach { filter ->
                 add("${filter.fieldName}[${filter.operator.name.lowercase()}]" to filter.value)

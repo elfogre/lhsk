@@ -76,7 +76,7 @@ class LHSBracketsParserTest : FeatureSpec({
                     Filter("field8", Operator.NOTIN, "whatever8"),
                 ),
             )
-            val queryParams = LHSBracketsParser.searchParamsToQueryParams(searchParams)
+            val queryParams = LHSBracketsParser.searchParamsToLHSBracketsQueryParams(searchParams)
             queryParams shouldBe listOf(
                 Pair("field3[eq]", "whatever3"),
                 Pair("field4[neq]", "whatever4"),
