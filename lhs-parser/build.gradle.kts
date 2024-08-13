@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 
-version = "1.0.0"
+version = "1.0.1"
 group = "io.github.elfogre"
 
 dependencies {
@@ -46,7 +46,7 @@ publishing {
         create<MavenPublication>("lhsParser") {
             groupId = "io.github.elfogre"
             artifactId = "lhs-parser"
-            version = "1.0.0"
+            version = "1.0.1"
 
             from(components["java"])
 

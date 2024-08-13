@@ -41,8 +41,8 @@ Add the following dependencies to your `build.gradle.kts` file:
 
 ```kotlin
 dependencies {
-    implementation("io.github.elfogre:lhs-parser:1.0.0")
-    implementation("io.github.elfogre:lhs-exposed:1.0.0")
+    implementation("io.github.elfogre:lhs-parser:1.0.1")
+    implementation("io.github.elfogre:lhs-exposed:1.0.1")
 }
 ```
 
