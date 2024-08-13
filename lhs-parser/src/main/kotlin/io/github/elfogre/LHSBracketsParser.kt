@@ -38,7 +38,16 @@ object LHSBracketsParser {
         return SearchParams(filters, sorts.sortedBy { it.priority })
     }
     
-    fun searchParamsToQueryParams(searchParams: SearchParams): List<Pair<String, String>> {
+    /**
+     * Converts search parameters to LHS brackets query parameters.
+     *
+     * Given a `SearchParams` object, this function builds a list of key-value pairs representing the LHS brackets query parameters.
+     * The query parameters are constructed based on the filters and sorts defined in the `SearchParams` object.
+     *
+     * @param searchParams the search parameters object containing filters and sorts
+     * @return a list of key-value pairs representing the query parameters
+     */
+    fun searchParamsToLHSBracketsQueryParams(searchParams: SearchParams): List<Pair<String, String>> {
         return buildList {
             searchParams.filters.forEach { filter ->
                 add("${filter.fieldName}[${filter.operator.name.lowercase()}]" to filter.value)

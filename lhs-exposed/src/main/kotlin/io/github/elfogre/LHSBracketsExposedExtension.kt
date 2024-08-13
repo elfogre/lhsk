@@ -29,14 +29,24 @@ import org.jetbrains.exposed.sql.andWhere
  * The method returns the modified query object with the order by clause applied.
  *
  * @param sorts the list of sorts to apply as the order by clause
+ * @param excludeColumns columns to exclude in generated sorts
+ * @param exceptionOnExcludedColumns default false. If true throw exception if excluded column is requested on sorts. If false sorts on excluded columns are silently discarded
  * @return the modified query object with the order by clause applied
  */
-fun Query.addOrderByFromLHSSort(sorts: List<Sort>): Query {
-    val exposedSorts = sorts.sortedBy { it.priority }.map { sort ->
-        val column = searchColumn(sort.fieldName, this.targets)
-        when (sort.sortType) {
-            SortType.ASC -> Pair(column, SortOrder.ASC)
-            SortType.DESC -> Pair(column, SortOrder.DESC)
+fun Query.addOrderByFromLHSSort(
+    sorts: List<Sort>,
+    excludeColumns: List<Column<*>> = emptyList(),
+    exceptionOnExcludedColumns: Boolean = false,
+): Query {
+    val exposedSorts = sorts.sortedBy { it.priority }.mapNotNull { sort ->
+        val column = searchColumn(sort.fieldName, this.targets, excludeColumns, exceptionOnExcludedColumns)
+        if (column == null) {
+            null
+        } else {
+            when (sort.sortType) {
+                SortType.ASC -> Pair(column, SortOrder.ASC)
+                SortType.DESC -> Pair(column, SortOrder.DESC)
+            }
         }
     }
     return this.orderBy(*exposedSorts.toTypedArray())
@@ -51,24 +61,51 @@ fun Query.addOrderByFromLHSSort(sorts: List<Sort>): Query {
  * The method returns the modified Query object.
  *
  * @param filters the list of filters to apply as where expressions
+ * @param excludeColumns columns to exclude in generated filters
+ * @param exceptionOnExcludedColumns default false. If true throw exception if excluded column is requested on filters. If false filters on excluded columns are silently discarded
  * @return the modified Query object
  */
-fun Query.addWhereExpressionFromLHSFilter(filters: List<Filter>): Query {
+fun Query.addWhereExpressionFromLHSFilter(
+    filters: List<Filter>,
+    excludeColumns: List<Column<*>> = emptyList(),
+    exceptionOnExcludedColumns: Boolean = false,
+): Query {
     filters.forEach { filter ->
-        val column = searchColumn(filter.fieldName, this.targets)
-        if (filter.operator in listOf(Operator.IN, Operator.NOTIN)) {
-            this.andWhere { column.addFilter(filter.operator, generateIterableValue(filter.value, column.columnType)) }
-        } else {
-            this.andWhere { column.addFilter(filter.operator, generateValue(filter.value, column.columnType)) }
+        val column = searchColumn(filter.fieldName, this.targets, excludeColumns, exceptionOnExcludedColumns)
+        if (column != null) {
+            if (filter.operator in listOf(Operator.IN, Operator.NOTIN)) {
+                this.andWhere {
+                    column.addFilter(
+                        filter.operator,
+                        generateIterableValue(filter.value, column.columnType)
+                    )
+                }
+            } else {
+                this.andWhere { column.addFilter(filter.operator, generateValue(filter.value, column.columnType)) }
+            }
         }
     }
     return this
 }
 
-private fun searchColumn(fieldName: String, targets: List<Table>): Column<out Any?> {
+private fun searchColumn(
+    fieldName: String,
+    targets: List<Table>,
+    excludeColumns: List<Column<*>>,
+    exceptionOnExcludedColumns: Boolean,
+): Column<out Any?>? {
     targets.forEach { table ->
         val column = table.columns.firstOrNull { it.name == fieldName }
-        if (column != null) { return column }
+        if (column != null) {
+            if (column in excludeColumns) {
+                if (exceptionOnExcludedColumns) {
+                    throw ExcludedColumnException("Column $fieldName is excluded")
+                } else {
+                    return null
+                }
+            }
+            return column
+        }
     }
     throw UnsupportedOperationException()
 }
@@ -116,3 +153,5 @@ private fun <T> Column<T>.greaterEq(t: T): Op<Boolean> {
 private fun <T> Column<T>.lessEq(t: T): Op<Boolean> {
     return LessEqOp(this, wrap(t))
 }
+
+class ExcludedColumnException(message: String) : Exception(message)

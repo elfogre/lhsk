@@ -24,7 +24,7 @@ Example:
 /api/search/data?property_type[eq]=PARKING&deposit_amount[lte]=604.75&sort[0]=auction_value:asc    
 ```
 
-This library provides utilities to parse LHS brackets syntax and also to easily apply them to database queries via [Exposed](https://github.com/JetBrains/Exposed) library.
+This library provides utilities to parse LHS brackets syntax, generate it and also to easily apply them to database queries via [Exposed](https://github.com/JetBrains/Exposed) library.
 
 ## Features
 
@@ -78,7 +78,25 @@ fun main() {
     }
 }
 ```
+Filter and sort operations accepts a list of fields to exclude them from sorting and filtering.
+
+**Why Use Excluded Fields?**
+
+- **Prevent Performance Issues:** Filtering by non-indexed fields can severely impact database performance.
+- **Protect Internal Logic Fields:** Avoid exposing and filtering by fields that are used for internal logic and should not be accessible externally.
+
 Check for more examples in [integration tests](lhs-exposed/src/test/kotlin/io/github/elfogre/LHSBracketsExposedExtensionTest.kt).
+
+### Example 3: LHS brackets syntax generation
+
+```kotlin
+import io.github.elfogre.LHSBracketsParser
+
+fun main() {
+    val queryParams = LHSBracketsParser.searchParamsToLHSBracketsQueryParams(searchParams)
+        ...
+}
+```
 
 ## Supported operators
 
