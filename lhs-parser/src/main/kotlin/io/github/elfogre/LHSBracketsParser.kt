@@ -17,7 +17,6 @@ object LHSBracketsParser {
      *
      * @param searchParams a list of key-value pairs representing the LHS expressions. Usually extracted from a request query params.
      * @return the parsed search parameters as a [SearchParams] object
-     * @throws InvalidSyntaxException if the syntax of the query parameters is invalid
      * @throws OperatorNotFoundException if invalid filter operators are provided
      */
     fun parseSearchQueryParams(searchParams: List<Pair<String, String>>): SearchParams {
@@ -25,14 +24,13 @@ object LHSBracketsParser {
         val sorts = mutableListOf<Sort>()
         searchParams.forEach { queryParam ->
             val field = queryParam.first.split("[", "]")
-            if (field.size < 2) {
-                throw InvalidSyntaxException()
-            }
-            if (field[0] == "sort") {
-                val sortData = queryParam.second.split(":")
-                sorts.add(Sort(sortData[0], SortType.fromString(sortData.getOrNull(1)), field[1].toInt()))
-            } else {
-                filters.add(Filter(field[0], Operator.fromString(field[1]), queryParam.second))
+            if (field.size == 2) {
+                if (field[0] == "sort") {
+                    val sortData = queryParam.second.split(":")
+                    sorts.add(Sort(sortData[0], SortType.fromString(sortData.getOrNull(1)), field[1].toInt()))
+                } else {
+                    filters.add(Filter(field[0], Operator.fromString(field[1]), queryParam.second))
+                }
             }
         }
         return SearchParams(filters, sorts.sortedBy { it.priority })
@@ -133,7 +131,6 @@ enum class Operator {
 }
 
 class OperatorNotFoundException : Throwable()
-class InvalidSyntaxException : Throwable()
 
 /**
  * The `Sort` class represents a sorting parameter used for sorting data.

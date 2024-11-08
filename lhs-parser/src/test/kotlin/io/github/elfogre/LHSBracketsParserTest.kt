@@ -48,14 +48,19 @@ class LHSBracketsParserTest : FeatureSpec({
                 )
             }
         }
-        scenario("invalid syntax exception") {
-            shouldThrow<InvalidSyntaxException> {
-                LHSBracketsParser.parseSearchQueryParams(
-                    listOf(
-                        Pair("field8", "whatever8"),
-                    )
+        scenario("non lhsk fields ignored") {
+            val searchParams = LHSBracketsParser.parseSearchQueryParams(
+                listOf(
+                    Pair("field8", "whatever8"),
+                    Pair("field4[neq]", "whatever4"),
                 )
-            }
+            )
+            searchParams shouldBe SearchParams(
+                sorts = emptyList(),
+                filters = listOf(
+                    Filter("field4", Operator.NEQ, "whatever4"),
+                )
+            )
         }
     }
     feature("searchParamsToQueryParams") {

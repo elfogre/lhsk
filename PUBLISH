@@ -1,0 +1,7 @@
+gradle -s publish
+
+Zip content generated in lhs-parser/build/staging-deploy/ and upload to https://central.sonatype.com/publishing
+
+Same for lhs-exposed
+
+PGP is called

@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 
-version = "1.0.1"
+version = "1.0.2"
 group = "io.github.elfogre"
 
 dependencies {
@@ -57,7 +57,7 @@ publishing {
         create<MavenPublication>("lhsExposed") {
             groupId = "io.github.elfogre"
             artifactId = "lhs-exposed"
-            version = "1.0.1"
+            version = "1.0.2"
 
             from(components["java"])
 
