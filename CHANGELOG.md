@@ -1,3 +1,11 @@
+# 1.0.3
+
+* Bugfix
+* Ignore non LHS parameters
+
+# 1.0.2
+DO NOT USE
+
 # 1.0.1
 
 * feat: LHSBracketsParser.searchParamsToLHSBracketsQueryParams transform SearchParams object to LHS brackets strings.
