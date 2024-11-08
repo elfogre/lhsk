@@ -24,7 +24,7 @@ object LHSBracketsParser {
         val sorts = mutableListOf<Sort>()
         searchParams.forEach { queryParam ->
             val field = queryParam.first.split("[", "]")
-            if (field.size == 2) {
+            if (field.size >= 2) {
                 if (field[0] == "sort") {
                     val sortData = queryParam.second.split(":")
                     sorts.add(Sort(sortData[0], SortType.fromString(sortData.getOrNull(1)), field[1].toInt()))

@@ -51,6 +51,7 @@ class LHSBracketsParserTest : FeatureSpec({
         scenario("non lhsk fields ignored") {
             val searchParams = LHSBracketsParser.parseSearchQueryParams(
                 listOf(
+                    Pair("field5[gt]", "10"),
                     Pair("field8", "whatever8"),
                     Pair("field4[neq]", "whatever4"),
                 )
@@ -58,6 +59,7 @@ class LHSBracketsParserTest : FeatureSpec({
             searchParams shouldBe SearchParams(
                 sorts = emptyList(),
                 filters = listOf(
+                    Filter("field5", Operator.GT, "10"),
                     Filter("field4", Operator.NEQ, "whatever4"),
                 )
             )
