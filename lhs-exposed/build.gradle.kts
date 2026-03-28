@@ -13,7 +13,7 @@ repositories {
     mavenCentral()
 }
 
-version = "1.0.3"
+version = "1.0.4"
 group = "io.github.elfogre"
 
 dependencies {
@@ -22,13 +22,13 @@ dependencies {
     testImplementation(libs.testcontainers)
     testImplementation(libs.testcontainersmysql)
     testImplementation(libs.mysql)
-    testImplementation(libs.exposedjdbc)
 
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
+    // This dependency is exported to consumers, that is to say, found on their compile classpath.
     api(project(":lhs-parser"))
 
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    // This dependency is used internally and not exposed to consumers on their own compile classpath.
     implementation(libs.exposed)
+    implementation(libs.exposedjdbc)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -57,7 +57,7 @@ publishing {
         create<MavenPublication>("lhsExposed") {
             groupId = "io.github.elfogre"
             artifactId = "lhs-exposed"
-            version = "1.0.3"
+            version = "1.0.4"
 
             from(components["java"])
 

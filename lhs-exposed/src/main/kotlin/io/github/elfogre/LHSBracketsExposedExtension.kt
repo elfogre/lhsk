@@ -1,26 +1,26 @@
 package io.github.elfogre
 
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.CustomEnumerationColumnType
-import org.jetbrains.exposed.sql.DecimalColumnType
-import org.jetbrains.exposed.sql.GreaterEqOp
-import org.jetbrains.exposed.sql.GreaterOp
-import org.jetbrains.exposed.sql.IColumnType
-import org.jetbrains.exposed.sql.IntegerColumnType
-import org.jetbrains.exposed.sql.LessEqOp
-import org.jetbrains.exposed.sql.LessOp
-import org.jetbrains.exposed.sql.LongColumnType
-import org.jetbrains.exposed.sql.Op
-import org.jetbrains.exposed.sql.Query
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.neq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.notInList
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.wrap
-import org.jetbrains.exposed.sql.StringColumnType
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.andWhere
+import org.jetbrains.exposed.v1.core.Column
+import org.jetbrains.exposed.v1.core.CustomEnumerationColumnType
+import org.jetbrains.exposed.v1.core.DecimalColumnType
+import org.jetbrains.exposed.v1.core.GreaterEqOp
+import org.jetbrains.exposed.v1.core.GreaterOp
+import org.jetbrains.exposed.v1.core.IColumnType
+import org.jetbrains.exposed.v1.core.IntegerColumnType
+import org.jetbrains.exposed.v1.core.LessEqOp
+import org.jetbrains.exposed.v1.core.LessOp
+import org.jetbrains.exposed.v1.core.LongColumnType
+import org.jetbrains.exposed.v1.core.Op
+import org.jetbrains.exposed.v1.core.SortOrder
+import org.jetbrains.exposed.v1.core.StringColumnType
+import org.jetbrains.exposed.v1.core.Table
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
+import org.jetbrains.exposed.v1.core.neq
+import org.jetbrains.exposed.v1.core.notInList
+import org.jetbrains.exposed.v1.core.wrap
+import org.jetbrains.exposed.v1.jdbc.Query
+import org.jetbrains.exposed.v1.jdbc.andWhere
 
 /**
  * Adds an order by clause to the query based on the provided list of sorts.
@@ -30,7 +30,7 @@ import org.jetbrains.exposed.sql.andWhere
  *
  * @param sorts the list of sorts to apply as the order by clause
  * @param excludeColumns columns to exclude in generated sorts
- * @param exceptionOnExcludedColumns default false. If true throw exception if excluded column is requested on sorts. If false sorts on excluded columns are silently discarded
+ * @param exceptionOnExcludedColumns default false. If true, throw an exception if the excluded column is requested on sorts. If false sorts on excluded columns are silently discarded
  * @return the modified query object with the order by clause applied
  */
 fun Query.addOrderByFromLHSSort(
@@ -56,13 +56,13 @@ fun Query.addOrderByFromLHSSort(
  * Adds where expressions to the Query based on the provided list of filters.
  * Each filter consists of a field name, an operator, and a value.
  * The method applies the filter conditions to the corresponding columns in the Query's target tables.
- * If the operator is IN or NOTIN, the filter value is treated as a comma-separated list and the condition is applied to the column as a list of values.
+ * If the operator is IN or NOTIN, the filter value is treated as a comma-separated list, and the condition is applied to the column as a list of values.
  * If the operator is any other comparison operator, the condition is applied to the column as a single value.
  * The method returns the modified Query object.
  *
  * @param filters the list of filters to apply as where expressions
  * @param excludeColumns columns to exclude in generated filters
- * @param exceptionOnExcludedColumns default false. If true throw exception if excluded column is requested on filters. If false filters on excluded columns are silently discarded
+ * @param exceptionOnExcludedColumns default false. If true, throw an exception if the excluded column is requested on filters. If false filters on excluded columns are silently discarded
  * @return the modified Query object
  */
 fun Query.addWhereExpressionFromLHSFilter(

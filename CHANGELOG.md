@@ -1,3 +1,7 @@
+# 1.0.4
+
+* Exposed 1.1.1 update
+
 # 1.0.3
 
 * Bugfix

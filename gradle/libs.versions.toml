@@ -4,10 +4,10 @@
 [versions]
 kotest = "5.9.1"
 kotesttestcontainers = "2.0.2"
-testcontainers = "1.20.0"
-testcontainersmysql = "1.20.0"
-exposed = "0.50.1"
-mysql = "8.4.0"
+testcontainers = "1.21.4"
+testcontainersmysql = "1.21.4"
+exposed = "1.1.1"
+mysql = "9.6.0"
 
 [libraries]
 kotest = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
@@ -19,5 +19,5 @@ exposed = { module = "org.jetbrains.exposed:exposed-core", version.ref = "expose
 exposedjdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed"}
 
 [plugins]
-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.22" }
+jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.3.20" }
 jreleaser = { id = "org.jreleaser", version = "1.13.1" }

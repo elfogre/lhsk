@@ -31,7 +31,7 @@ This library provides utilities to parse LHS brackets syntax, generate it and al
 - Easy integration with Kotlin projects.
 - Comprehensive API for database interactions using [Exposed](https://github.com/JetBrains/Exposed).
 - Support for join queries in Exposed.
-- Supports Java SDK version 11 and Kotlin API version 1.9.
+- Supports Java SDK version 11 and Kotlin API version 2.3.
 
 ## Installation
 
@@ -41,8 +41,8 @@ Add the following dependencies to your `build.gradle.kts` file:
 
 ```kotlin
 dependencies {
-    implementation("io.github.elfogre:lhs-parser:1.0.3")
-    implementation("io.github.elfogre:lhs-exposed:1.0.3")
+    implementation("io.github.elfogre:lhs-parser:1.0.4")
+    implementation("io.github.elfogre:lhs-exposed:1.0.4")
 }
 ```
 
